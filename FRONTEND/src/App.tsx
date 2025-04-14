@@ -1,0 +1,39 @@
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import './App.css';
+import FrontPage from './pages/FrontPage';
+import LoginPage from './pages/LoginPage';
+import CatPage from './pages/CatPage';
+import CatHistoryPage from './pages/CatHistoryPage';
+import SignupPage from './pages/SignupPage';
+import UserPage from './pages/UserPage';
+import UserEditPage from './pages/UserEditPage';
+import PasswordEditPage from './pages/PasswordEditPage';
+import ForgotPasswordPage from './pages/ForgotPasswordPage';
+import ResetPasswordPage from './pages/ResetPasswordPage';
+import VerifyEmailPage from './pages/VerifyEmailPage';
+import CatDatabasePage from './pages/CatDatabasePage';
+import EmailVerificationPage from './pages/EmailVerificationPage';
+
+function App() {
+  return (
+    <Router>
+      <Routes>
+        <Route path="/" element={<FrontPage />} />
+        <Route path="/login" element={<LoginPage />} />
+        <Route path="/cats" element={<CatPage />} />
+        <Route path="/history" element={<CatHistoryPage />} />
+        <Route path="/signup" element={<SignupPage />} />
+        <Route path="/account" element={<UserPage />} />
+        <Route path="/accountedit" element={<UserEditPage />} />
+        <Route path="/changepassword" element={<PasswordEditPage />} />
+        <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+        <Route path="/reset-password" element={<ResetPasswordPage />} />
+        <Route path='/emailverification' element={<EmailVerificationPage />} />
+        <Route path="/verify-email" element={<VerifyEmailPage />} />
+        <Route path="/database" element={<CatDatabasePage />} />
+      </Routes>
+    </Router>
+  );
+}
+
+export default App;

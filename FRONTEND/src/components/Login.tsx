@@ -1,0 +1,102 @@
+import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
+
+function Login()
+{
+    const [message,setMessage] = useState('');
+    const [loginName,setLoginName] = React.useState('');
+    const [loginPassword,setPassword] = React.useState('');
+    const [message2,setMessage2] = useState('');
+
+    async function doLogin(event:any) : Promise<void>
+    {
+        event.preventDefault();
+        
+        var obj = {login:loginName,password:loginPassword};
+        var js = JSON.stringify(obj);
+        try
+        {
+            const response = await fetch('http://cop4331-11.com:5000/api/login', {method:'POST',body:js,headers:{'Content-Type':'application/json'}});
+            var res = JSON.parse(await response.text());
+            if(res.valid == -1)
+            {
+                setMessage('Your user/password combination was incorrect.');
+                setMessage2('Please try again.');
+                return;
+            }
+            else
+            {
+                var user = {firstName:res.firstName,lastName:res.lastName,email:res.email,login:res.login,id:1}
+                localStorage.setItem('user_data', JSON.stringify(user));
+                var userToken = res.userToken;
+                localStorage.setItem('user_token', userToken);
+                if (res.verified == 'yes') {
+                    setMessage('Logging in...');
+                    setMessage2('');
+                    window.location.href = '/cats';
+                    return;
+                }
+                else if (res.verified == 'no') {
+                    window.location.href = '/emailverification';
+                    return;
+                }
+            }
+        }
+        catch(error:any)
+        {
+            alert(error.toString());
+            return;
+        }
+    };
+
+    function handleSetLoginName( e: any ) : void
+    {
+        setLoginName( e.target.value );
+    }
+
+    function handleSetPassword( e: any ) : void
+    {
+        setPassword( e.target.value );
+    }
+
+    return(
+     <div className="flex justify-center items-center min-h-screen bg-cover bg-center bg-fixed" style={{ backgroundImage: 'url("./images/catbg2.gif")' }}>
+      <div className="bg-white/90 p-8 rounded-lg shadow-xl w-[400px] mx-auto text-center h-[400px] flex flex-col">
+        <span className="text-4xl font-bold text-black mb-10">Login</span>
+        <div className="flex flex-col items-center">
+          <input
+            type="text"
+            id="loginName"
+            placeholder="Username"
+            onChange={handleSetLoginName}
+            className="w-4/5 p-3 mb-4 border-2 border-black rounded-md text-black bg-gray-400"
+          />
+          <input
+            type="password"
+            id="loginPassword"
+            placeholder="Password"
+            onChange={handleSetPassword}
+            className="w-4/5 p-3 mb-4 border-2 border-black rounded-md text-black"
+          />
+          <input
+            type="submit"
+            id="loginButton"
+            value="Explore the pawsibilities!"
+            onClick={doLogin}
+            className="w-4/5 p-3 mb-4 bg-teal-600 text-white rounded-md cursor-pointer hover:bg-teal-500"
+          />
+        </div>
+            {/* Add "Forgot Password?" here */}
+            <div style={{ textAlign: 'center', marginTop: '1rem' }}>
+                <Link to="/forgot-password" className="text-blue-500 hover:text-blue-700">Forgot your password?</Link>
+            </div>
+
+        <span className="text-sm text-red-600">{message}</span>
+        <span className="text-sm text-red-600">{message2}</span>
+      </div>
+    </div>
+    );
+};
+
+
+export default Login;

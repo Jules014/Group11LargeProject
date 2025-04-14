@@ -1,0 +1,59 @@
+import { useEffect, useState } from 'react';
+
+interface Cat {
+  date: string;
+  breed: string;
+  confidence: number;
+}
+
+const CatHistory = () => {
+  const [cats, setCats] = useState<Cat[]>([]);
+  const [error, setError] = useState('');
+
+  let userToken = localStorage.getItem("user_token");
+  var obj = {userToken:userToken};
+  var js = JSON.stringify(obj);
+
+  useEffect(() => {
+    const fetchCats = async () => {
+      try {
+        const res = await fetch('http://cop4331-11.com:5000/api/gethistory', {method:'POST',body:js,headers:{'Content-Type':'application/json'}});
+        const data = await res.json();
+        if (data.error) setError(data.error);
+        else setCats(data.results);
+      }
+      catch (err) {
+        setError('Failed to fetch cat search history.');
+      }
+    };
+
+    fetchCats();
+  }, []);
+
+  if (error) return <div className="text-red-500 text-center">{error}</div>;
+
+  return (
+    <div className="overflow-x-auto px-4 py-6">
+      <table className="min-w-full bg-white shadow-md rounded-lg overflow-hidden">
+        <thead>
+          <tr className="bg-gray-200 text-left text-sm font-medium text-gray-700 uppercase">
+            <th className="px-4 py-3">Date</th>
+            <th className="px-4 py-3">Breed</th>
+            <th className="px-4 py-3">Confidence</th>
+          </tr>
+        </thead>
+        <tbody>
+          {cats.map((cat, index) => (
+            <tr key={index} className="border-b hover:bg-gray-50 text-sm">
+              <td className="px-4 py-2">{cat.date}</td>
+              <td className="px-4 py-2">{cat.breed}</td>
+              <td className="px-4 py-2">{cat.confidence}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  );
+};
+
+export default CatHistory;

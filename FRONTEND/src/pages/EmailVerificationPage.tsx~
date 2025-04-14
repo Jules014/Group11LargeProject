@@ -1,0 +1,14 @@
+import EmailVerification from '../components/EmailVerification';
+import HeaderBar from '../components/HeaderBar';
+
+const EmailVerificationPage = () =>
+{
+    return(
+        <div>
+            <HeaderBar />
+            <EmailVerification />
+        </div>
+    );
+}
+
+export default EmailVerificationPage;
